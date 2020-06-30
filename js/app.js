@@ -47,17 +47,17 @@ function imageClick(event){
   var nextThirdItemIndex = Math.floor(Math.random() * allItems.length);
 
   // Make sure the FIRST item on the page is not repeated and is not the same as the other two images
-  while ((firstItemIndex === nextFirstItemIndex) || (nextSecondItemIndex === nextFirstItemIndex)){
+  while ((firstItemIndex === nextFirstItemIndex) || (nextSecondItemIndex === nextFirstItemIndex || nextThirdItemIndex === nextFirstItemIndex)){
     nextFirstItemIndex = Math.floor(Math.random() * allItems.length);
   }
 
   // Make sure the SECOND item on the page is not repeated and is not the same as the other two images
-  while ((secondItemIndex === nextSecondItemIndex) || (nextThirdItemIndex === nextSecondItemIndex)){
+  while ((secondItemIndex === nextSecondItemIndex) || (nextThirdItemIndex === nextSecondItemIndex || nextFirstItemIndex === nextSecondItemIndex)){
     nextSecondItemIndex = Math.floor(Math.random() * allItems.length);
   }
 
   // Make sure the THIRD item on the page is not repeated and is not the same as the other two images
-  while ((thirdItemIndex === nextThirdItemIndex) || (nextFirstItemIndex === nextThirdItemIndex)){
+  while ((thirdItemIndex === nextThirdItemIndex) || (nextFirstItemIndex === nextThirdItemIndex || nextSecondItemIndex === nextThirdItemIndex)){
     nextThirdItemIndex = Math.floor(Math.random() * allItems.length);
   }
 
@@ -73,13 +73,16 @@ function imageClick(event){
   images[2].src = allItems[thirdItemIndex].itemSource;
   allItems[secondItemIndex].timeShown++;
 
-  // Calculate number of votes
   if(totalClickCount >= maxVotes){
-    var footerElement = document.getElementsByTagName('footer')[0];
-    if(footerElement.firstElementChild){
-      footerElement.firstElementChild.remove();
+    var resultsList = document.getElementById('votedList');
+    for(var i =0; i < allItems.length; i++){
+      var bMallItem = document.createElement('li');
+      bMallItem.textContent = `${allItems[i].itemName} was clicked on ${allItems[i].itemClicks} times and was shown ${allItems[i].timeShown} times.`;
+      resultsList.appendChild(bMallItem);
     }
-    footerElement.textContent = 'You voted 25 times.';
+    for(i = 0; i < images.length; i++){
+      images[i].removeEventListener('click', imageClick);
+    }
   }
 }// close function
 
