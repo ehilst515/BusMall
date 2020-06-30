@@ -27,7 +27,18 @@ new Item('Breakfast Maker', 'img/breakfast.jpg');
 new Item('Chair', 'img/chair.jpg');
 new Item('Meatball Bublegum', 'img/bubblegum.jpg');
 new Item('Cthulhu Toy', 'img/cthulhu.jpg');
-new Item('Dog Duck Bill','img/dog-duck.jpg');
+new Item('Dog Duck Bill', 'img/dog-duck.jpg');
+new Item('Dragon Meat', 'img/dragon.jpg');
+new Item('Pen Utensils', 'img/pen.jpg');
+new Item('Pet Sweep', 'img/pet-sweep.jpg');
+new Item('Pizza Scissors', 'img/scissors.jpg');
+new Item('Shark Sleeping Bag', 'img/shark.jpg');
+new Item('Baby Sweep', 'img/sweep.png');
+new Item('Tauntaun Sleeping Bag', 'img/tauntaun.jpg');
+new Item('Univorn Meat', 'img/unicorn.jpg');
+new Item('Tentacle USB', 'img/usb.gif');
+new Item('Self Watering Can', 'img/water-can.jpg');
+new Item('Wine Glass', 'img/wine-glass.jpg');
 
 var totalClickCount = 0;
 

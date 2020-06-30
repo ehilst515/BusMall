@@ -31,7 +31,8 @@ li{
 }
 
 main{
-    background-color: hsla(67, 39%, 40%, 0.5) ;
+    background-color: hsla(67, 39%, 40%, 0.5);
+    padding-bottom: 36px;
 }
 
 footer{
