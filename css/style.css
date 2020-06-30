@@ -1,0 +1,49 @@
+h1{
+    text-align: center;
+    font-size: xx-large;
+    background-color: #51A6BF;
+}
+
+h2{
+    text-align: center;
+    font-size: x-large;  
+}
+
+body{
+    width: 960px;
+    margin: auto;
+}
+
+img{
+    border: solid #858E3F;
+    width: 200px;
+    height: 200px;
+    margin: auto;
+}
+
+h1, h2, h4, p {
+    color: #353F49;
+    font-family: 'MuseoModerno', cursive;
+}
+
+li{
+    font-family: 'Source Sans Pro', sans-serif;;
+}
+
+main{
+    background-color: hsla(67, 39%, 40%, 0.5) ;
+}
+
+footer{
+    background-color: #51A6BF;
+    text-align: center;
+}
+
+h4{
+    font-size: large;
+}
+
+li{
+    font-size: medium;
+    margin: 10px;
+}
