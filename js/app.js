@@ -82,7 +82,7 @@ function imageClick(event){
   images[1].src = allItems[secondItemIndex].itemSource;
   allItems[secondItemIndex].timeShown++;
   images[2].src = allItems[thirdItemIndex].itemSource;
-  allItems[secondItemIndex].timeShown++;
+  allItems[thirdItemIndex].timeShown++;
 
   if(totalClickCount >= maxVotes){
     var resultsList = document.getElementById('votedList');
