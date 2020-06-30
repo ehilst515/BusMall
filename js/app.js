@@ -54,6 +54,8 @@ function imageClick(event){
     allItems[thirdItemIndex].itemClicks++;
   }//close else if
 
+  console.log('total click count: ', totalClickCount);
+
   // Get random image from array
   var nextFirstItemIndex = Math.floor(Math.random() * allItems.length);
   var nextSecondItemIndex = Math.floor(Math.random() * allItems.length);
@@ -94,7 +96,7 @@ function imageClick(event){
       if (allItems[i].timeShown < 1){
         clickPercentage = 0;
       }
-      bMallItem.textContent = `${allItems[i].itemName} was clicked on ${allItems[i].itemClicks} times and was shown ${allItems[i].timeShown} times. Choosen ` + clickPercentage + '%.';
+      bMallItem.textContent = `${allItems[i].itemName} was clicked on ${allItems[i].itemClicks} times and was shown ${allItems[i].timeShown} times. Choosen ` + clickPercentage + '% of times available.';
       resultsList.appendChild(bMallItem);
       //Calculate percentages
       percentagesArray.push(clickPercentage);
@@ -103,7 +105,8 @@ function imageClick(event){
     for(i = 0; i < images.length; i++){
       images[i].removeEventListener('click', imageClick);
     }
-  }
+    runChart();
+  }// close total counts if loop
 }// close image construction function
 
 //Create function for the chart render so that we can access the object properties.
@@ -128,16 +131,52 @@ function runChart() {
       labels: getItemArray('itemName'),
       datasets: [{
         label: '# of Votes',
-        data: getItemArray('timesClicked'),
+        data: getItemArray('itemClicks'),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(255, 159, 64, 0.8)'
         ],
         borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
           'rgba(255, 99, 132, 1)',
           'rgba(54, 162, 235, 1)',
           'rgba(255, 206, 86, 1)',
@@ -158,11 +197,6 @@ function runChart() {
       }
     }
   });
-
-
-
-
-
 }//close chart function
 
 // Event listener
