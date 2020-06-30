@@ -10,6 +10,8 @@ var thirdItemIndex = 2;
 var allItems = [];
 var maxVotes = 25;
 
+var percentagesArray = [];
+
 function Item(itemName, itemSource){
   this.itemName = itemName;
   this.itemSource = itemSource;
@@ -88,16 +90,82 @@ function imageClick(event){
     var resultsList = document.getElementById('votedList');
     for(var i =0; i < allItems.length; i++){
       var bMallItem = document.createElement('li');
-      bMallItem.textContent = `${allItems[i].itemName} was clicked on ${allItems[i].itemClicks} times and was shown ${allItems[i].timeShown} times.`;
+      var clickPercentage = Math.round(allItems[i].itemClicks / allItems[i].timeShown * 100);
+      if (allItems[i].timeShown < 1){
+        clickPercentage = 0;
+      }
+      bMallItem.textContent = `${allItems[i].itemName} was clicked on ${allItems[i].itemClicks} times and was shown ${allItems[i].timeShown} times. Choosen ` + clickPercentage + '%.';
       resultsList.appendChild(bMallItem);
+      //Calculate percentages
+      percentagesArray.push(clickPercentage);
+      console.log(percentagesArray);
     }
     for(i = 0; i < images.length; i++){
       images[i].removeEventListener('click', imageClick);
     }
   }
-}// close function
+}// close image construction function
+
+//Create function for the chart render so that we can access the object properties.
+function getItemArray(itemProperty){
+  var answer = [];
+  for(var j = 0; j < allItems.length; j++){
+    answer[j] = allItems[j][itemProperty];
+  }
+  console.log(answer);
+  return answer;
+}
+
+
+// Chart function
+function runChart() {
+
+  var ctx = document.getElementById('itemChart').getContext('2d');
+
+  var itemChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: getItemArray('itemName'),
+      datasets: [{
+        label: '# of Votes',
+        data: getItemArray('timesClicked'),
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+
+
+
+
+
+}//close chart function
 
 // Event listener
-for(var i = 0; i< images.length; i++){
+for(var i = 0; i < images.length; i++){
   images[i].addEventListener('click', imageClick);
 }

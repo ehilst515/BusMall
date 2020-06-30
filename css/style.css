@@ -12,6 +12,7 @@ h2{
 body{
     width: 960px;
     margin: auto;
+    text-align: center;
 }
 
 img{
@@ -33,6 +34,7 @@ li{
 main{
     background-color: hsla(67, 39%, 40%, 0.5);
     padding-bottom: 36px;
+    margin: auto;
 }
 
 footer{
