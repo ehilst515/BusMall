@@ -1,18 +1,14 @@
 'use strict';
-
 // get item tags from html
 var images = document.getElementsByTagName('img');
-
 // initial blank array and indexes for items
 var firstItemIndex = 0;
 var secondItemIndex = 1;
 var thirdItemIndex = 2;
 var allItems = [];
 var maxVotes = 25;
-
-var percentagesArray = [];
-
-function Item(itemName, itemSource, itemClicks){
+// var percentagesArray = [];
+function Item(itemName, itemSource, itemClicks, timeShown){
   this.itemName = itemName;
   this.itemSource = itemSource;
   if(itemClicks){
@@ -20,10 +16,13 @@ function Item(itemName, itemSource, itemClicks){
   } else {
     this.itemClicks = 0;
   }
-  this.timeShown = 0;
+  if(timeShown){
+    this.timeShown = timeShown;
+  } else {
+    this.timeShown = 0;
+  }
   allItems.push(this);
 }
-
 //Create function for the chart render so that we can access the object properties.
 function getItemArray(itemProperty){
   var answer = [];
@@ -33,21 +32,18 @@ function getItemArray(itemProperty){
   console.log(answer);
   return answer;
 }
-
 // Check for local storage and get info if it exists
 var savedVotesString = localStorage.getItem('savedItems');
-
 if(savedVotesString){
   var arrayOfNotVoteObject = JSON.parse(savedVotesString);
-  console.log(arrayOfNotVoteObject);
-  // Calculate current percentages
-
+  console.log('savedVotesStringParsed ', arrayOfNotVoteObject);
   for(var j = 0; j < arrayOfNotVoteObject.length; j++){
     new Item(arrayOfNotVoteObject[j].itemName,
       arrayOfNotVoteObject[j].itemSource,
-      arrayOfNotVoteObject[j].itemClicks);
+      arrayOfNotVoteObject[j].itemClicks,
+      arrayOfNotVoteObject[j].timeShown);
   }
-} else{
+} else {
 // Create item objects
   new Item('Starwars Bag', 'img/bag.jpg');
   new Item('Banana Slicer', 'img/banana.jpg');
@@ -70,41 +66,32 @@ if(savedVotesString){
   new Item('Self Watering Can', 'img/water-can.jpg');
   new Item('Wine Glass', 'img/wine-glass.jpg');
 }
-
 allItems[0].timeShown = 1;
 allItems[1].timeShown = 1;
 allItems[2].timeShown = 1;
-
 var totalClickCount = 0;
-
 function imageClick(event){
   totalClickCount++;
+  console.log('total click count: ', totalClickCount);
   if(event.srcElement.id === 'imgOne'){
-    console.log(allItems[firstItemIndex]);
-    allItems[firstItemIndex].itemClicks++;}//close if
-  else if(event.srcElement.id === 'imgTwo'){
+    allItems[firstItemIndex].itemClicks++;
+  } else if(event.srcElement.id === 'imgTwo'){
     allItems[secondItemIndex].itemClicks++;
   } else if(event.srcElement.id === 'imgThree'){
     allItems[thirdItemIndex].itemClicks++;
-  }//close else if
-
-  console.log('total click count: ', totalClickCount);
-
+  }
   // Get random image from array
   var nextFirstItemIndex = Math.floor(Math.random() * allItems.length);
-  var nextSecondItemIndex = Math.floor(Math.random() * allItems.length);
-  var nextThirdItemIndex = Math.floor(Math.random() * allItems.length);
-
   // Make sure the FIRST item on the page is not repeated and is not the same as the other two images
   while ((firstItemIndex === nextFirstItemIndex) || (nextSecondItemIndex === nextFirstItemIndex || nextThirdItemIndex === nextFirstItemIndex)){
     nextFirstItemIndex = Math.floor(Math.random() * allItems.length);
   }
-
+  var nextSecondItemIndex = Math.floor(Math.random() * allItems.length);
   // Make sure the SECOND item on the page is not repeated and is not the same as the other two images
   while ((secondItemIndex === nextSecondItemIndex) || (nextThirdItemIndex === nextSecondItemIndex || nextFirstItemIndex === nextSecondItemIndex)){
     nextSecondItemIndex = Math.floor(Math.random() * allItems.length);
   }
-
+  var nextThirdItemIndex = Math.floor(Math.random() * allItems.length);
   // Make sure the THIRD item on the page is not repeated and is not the same as the other two images
   while ((thirdItemIndex === nextThirdItemIndex) || (nextFirstItemIndex === nextThirdItemIndex || nextSecondItemIndex === nextThirdItemIndex)){
     nextThirdItemIndex = Math.floor(Math.random() * allItems.length);
@@ -116,29 +103,27 @@ function imageClick(event){
 
   //Pick a random item from array
   images[0].src = allItems[firstItemIndex].itemSource;
-  allItems[firstItemIndex].timeShown++;
   images[1].src = allItems[secondItemIndex].itemSource;
-  allItems[secondItemIndex].timeShown++;
   images[2].src = allItems[thirdItemIndex].itemSource;
+  allItems[firstItemIndex].timeShown++;
+  allItems[secondItemIndex].timeShown++;
   allItems[thirdItemIndex].timeShown++;
-
 
   if(totalClickCount >= maxVotes){
     localStorage.setItem('savedItems', JSON.stringify(allItems));
-
+    allItems[firstItemIndex].timeShown++;
+    allItems[secondItemIndex].timeShown++;
+    allItems[thirdItemIndex].timeShown++;
     var resultsList = document.getElementById('votedList');
     for(var i =0; i < allItems.length; i++){
       var bMallItem = document.createElement('li');
       if(allItems[i].itemClicks === 0){
-        var clickPercentage = `0 clicks and shown ${allItems[i].timeShown} times.`;
+        var clickPercentage = '0';
       } else {
-        clickPercentage = Math.round((allItems[i]['itemClicks'] / allItems[i]['timeShown']) * 100);
+        clickPercentage = Math.round(( Number(`${allItems[i].itemClicks} `)/ (Number(`${allItems[i].timeShown}`)) * 100));
       }
       bMallItem.textContent = `${allItems[i].itemName} was clicked on ${allItems[i].itemClicks} times and was shown ${allItems[i].timeShown} times. Choosen ` + clickPercentage + '% of times available.';
       resultsList.appendChild(bMallItem);
-      //Calculate percentages
-      percentagesArray.push(clickPercentage);
-      console.log(percentagesArray);
     }
     for(i = 0; i < images.length; i++){
       images[i].removeEventListener('click', imageClick);
@@ -147,14 +132,11 @@ function imageClick(event){
     // Save data to local storage
   }// close total counts if loop
 }// close image construction function
-
 // Chart function
 function runChart() {
-
   var ctx = document.getElementById('itemChart').getContext('2d');
-
   // eslint-disable-next-line no-unused-vars
-  var itemChart = new Chart(ctx, {
+  new Chart(ctx, {
     type: 'bar',
     data: {
       labels: getItemArray('itemName'),
@@ -227,7 +209,6 @@ function runChart() {
     }
   });
 }//close chart function
-
 // Event listener
 for(var i = 0; i < images.length; i++){
   images[i].addEventListener('click', imageClick);
