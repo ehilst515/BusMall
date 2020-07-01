@@ -8,45 +8,69 @@ var firstItemIndex = 0;
 var secondItemIndex = 1;
 var thirdItemIndex = 2;
 var allItems = [];
-var maxVotes = 25;
+var maxVotes = 2;
 
 var percentagesArray = [];
 
-function Item(itemName, itemSource){
+function Item(itemName, itemSource, itemClicks, timeShown){
   this.itemName = itemName;
   this.itemSource = itemSource;
-  this.itemClicks = 0;
-  this.timeShown = 0;
+  if(itemClicks){
+    this.itemClicks = itemClicks;
+  } else {
+    this.itemClicks = 0;
+  }
+  if(timeShown){
+    this.timeShown = timeShown;
+  } else {
+    this.timeShown = 0;
+  }
+
   allItems.push(this);
 }
 
+// Check for local storage and get info if it exists
+var savedVotesString = localStorage.getItem('savedItems');
+
+if(savedVotesString !== null){
+  var arrayOfNotVoteObject = JSON.parse(savedVotesString);
+  console.log(arrayOfNotVoteObject);
+  // Calculate current percentages
+
+  for(var j = 0; j < arrayOfNotVoteObject.length; j++){
+    var clickPercentage = Math.round(Number(arrayOfNotVoteObject[j].itemClicks) / Number(arrayOfNotVoteObject[j].timeShown) * 100);
+    new Item(arrayOfNotVoteObject[j].itemName, arrayOfNotVoteObject[j].itemSource, arrayOfNotVoteObject[j].itemClicks);
+  }
+} else{
 // Create item objects
-new Item('Starwars Bag', 'img/bag.jpg');
-new Item('Banana Slicer', 'img/banana.jpg');
-new Item('Bathroom Stand', 'img/bathroom.jpg');
-new Item('Open Toe Boots', 'img/boots.jpg');
-new Item('Breakfast Maker', 'img/breakfast.jpg');
-new Item('Chair', 'img/chair.jpg');
-new Item('Meatball Bublegum', 'img/bubblegum.jpg');
-new Item('Cthulhu Toy', 'img/cthulhu.jpg');
-new Item('Dog Duck Bill', 'img/dog-duck.jpg');
-new Item('Dragon Meat', 'img/dragon.jpg');
-new Item('Pen Utensils', 'img/pen.jpg');
-new Item('Pet Sweep', 'img/pet-sweep.jpg');
-new Item('Pizza Scissors', 'img/scissors.jpg');
-new Item('Shark Sleeping Bag', 'img/shark.jpg');
-new Item('Baby Sweep', 'img/sweep.png');
-new Item('Tauntaun Sleeping Bag', 'img/tauntaun.jpg');
-new Item('Univorn Meat', 'img/unicorn.jpg');
-new Item('Tentacle USB', 'img/usb.gif');
-new Item('Self Watering Can', 'img/water-can.jpg');
-new Item('Wine Glass', 'img/wine-glass.jpg');
+  new Item('Starwars Bag', 'img/bag.jpg');
+  new Item('Banana Slicer', 'img/banana.jpg');
+  new Item('Bathroom Stand', 'img/bathroom.jpg');
+  new Item('Open Toe Boots', 'img/boots.jpg');
+  new Item('Breakfast Maker', 'img/breakfast.jpg');
+  new Item('Chair', 'img/chair.jpg');
+  new Item('Meatball Bublegum', 'img/bubblegum.jpg');
+  new Item('Cthulhu Toy', 'img/cthulhu.jpg');
+  new Item('Dog Duck Bill', 'img/dog-duck.jpg');
+  new Item('Dragon Meat', 'img/dragon.jpg');
+  new Item('Pen Utensils', 'img/pen.jpg');
+  new Item('Pet Sweep', 'img/pet-sweep.jpg');
+  new Item('Pizza Scissors', 'img/scissors.jpg');
+  new Item('Shark Sleeping Bag', 'img/shark.jpg');
+  new Item('Baby Sweep', 'img/sweep.png');
+  new Item('Tauntaun Sleeping Bag', 'img/tauntaun.jpg');
+  new Item('Univorn Meat', 'img/unicorn.jpg');
+  new Item('Tentacle USB', 'img/usb.gif');
+  new Item('Self Watering Can', 'img/water-can.jpg');
+  new Item('Wine Glass', 'img/wine-glass.jpg');
+}
 
 var totalClickCount = 0;
 
 function imageClick(event){
   totalClickCount++;
   if(event.srcElement.id === 'imgOne'){
+    console.log(allItems[firstItemIndex]);
     allItems[firstItemIndex].itemClicks++;}//close if
   else if(event.srcElement.id === 'imgTwo'){
     allItems[secondItemIndex].itemClicks++;
@@ -88,11 +112,18 @@ function imageClick(event){
   images[2].src = allItems[thirdItemIndex].itemSource;
   allItems[thirdItemIndex].timeShown++;
 
-  if(totalClickCount >= maxVotes){
+  if(savedVotesString !== null){
+    allItems = savedVotesString;
+    runChart();
+  }
+
+  if(totalClickCount >= maxVotes && !savedVotesString){
+    localStorage.setItem('savedItems', JSON.stringify(allItems));
+
     var resultsList = document.getElementById('votedList');
     for(var i =0; i < allItems.length; i++){
       var bMallItem = document.createElement('li');
-      var clickPercentage = Math.round(allItems[i].itemClicks / allItems[i].timeShown * 100);
+      clickPercentage = Math.round(allItems[i].itemClicks / allItems[i].timeShown * 100);
       if (allItems[i].timeShown < 1){
         clickPercentage = 0;
       }
@@ -106,6 +137,7 @@ function imageClick(event){
       images[i].removeEventListener('click', imageClick);
     }
     runChart();
+    // Save data to local storage
   }// close total counts if loop
 }// close image construction function
 
@@ -125,6 +157,7 @@ function runChart() {
 
   var ctx = document.getElementById('itemChart').getContext('2d');
 
+  // eslint-disable-next-line no-unused-vars
   var itemChart = new Chart(ctx, {
     type: 'bar',
     data: {
