@@ -7,7 +7,7 @@ var secondItemIndex = 1;
 var thirdItemIndex = 2;
 var allItems = [];
 var maxVotes = 25;
-// var percentagesArray = [];
+
 function Item(itemName, itemSource, itemClicks, timeShown){
   this.itemName = itemName;
   this.itemSource = itemSource;
@@ -23,6 +23,7 @@ function Item(itemName, itemSource, itemClicks, timeShown){
   }
   allItems.push(this);
 }
+
 //Create function for the chart render so that we can access the object properties.
 function getItemArray(itemProperty){
   var answer = [];
@@ -66,9 +67,11 @@ if(savedVotesString){
   new Item('Self Watering Can', 'img/water-can.jpg');
   new Item('Wine Glass', 'img/wine-glass.jpg');
 }
+// Set first items shown count to 1 so count is accurate
 allItems[0].timeShown = 1;
 allItems[1].timeShown = 1;
 allItems[2].timeShown = 1;
+
 var totalClickCount = 0;
 function imageClick(event){
   totalClickCount++;
@@ -96,12 +99,12 @@ function imageClick(event){
   while ((thirdItemIndex === nextThirdItemIndex) || (nextFirstItemIndex === nextThirdItemIndex || nextSecondItemIndex === nextThirdItemIndex)){
     nextThirdItemIndex = Math.floor(Math.random() * allItems.length);
   }
-
+  // Set current items to next item for next round
   firstItemIndex = nextFirstItemIndex;
   secondItemIndex = nextSecondItemIndex;
   thirdItemIndex = nextThirdItemIndex;
 
-  //Pick a random item from array
+  // Pick a random item from array
   images[0].src = allItems[firstItemIndex].itemSource;
   images[1].src = allItems[secondItemIndex].itemSource;
   images[2].src = allItems[thirdItemIndex].itemSource;
@@ -132,9 +135,11 @@ function imageClick(event){
     // Save data to local storage
   }// close total counts if loop
 }// close image construction function
+
 // Chart function
 function runChart() {
   var ctx = document.getElementById('itemChart').getContext('2d');
+
   // eslint-disable-next-line no-unused-vars
   new Chart(ctx, {
     type: 'bar',
